@@ -9,6 +9,15 @@ from .serializers import OrdenInputSerializer
 
 
 class CompraAPIView(APIView):
+    def get(self, request):
+        return Response({
+            "mensaje": "API funcionando en AWS"
+        })
+
+    def post(self, request):
+        return Response({
+            "mensaje": "Compra realizada"
+        })
     """
     Endpoint para procesar compras via JSON.
     POST /api/v1/comprar/
