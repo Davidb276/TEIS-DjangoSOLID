@@ -21,9 +21,12 @@ RUN pip install --no-cache-dir -r requirements.txt
 # 6. Copiamos el resto del código fuente del proyecto
 COPY . /app/
 
-# 7. Exponemos el puerto 8000
+# 7. Colectar archivos estáticos
+RUN python manage.py collectstatic --noinput --settings=Tienda.settings || true
+
+# 8. Exponemos el puerto 8000
 EXPOSE 8000
 
-# 8. Comando por defecto al iniciar el contenedor (será sobreescrito por docker-compose)
+# 9. Comando por defecto al iniciar el contenedor (será sobreescrito por docker-compose)
 # Importante: Este comando es reemplazado por el 'command' en docker-compose.yml
 CMD ["gunicorn", "Tienda.wsgi:application", "--bind", "0.0.0.0:8000"]
