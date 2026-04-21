@@ -8,12 +8,10 @@ ENV PYTHONUNBUFFERED 1
 # 3. Establecemos el directorio de trabajo dentro del contenedor (el "quirófano")
 WORKDIR /app
 
-# 4. Instalamos dependencias del sistema operativo necesarias para Postgres y MySQL
+# 4. Instalamos dependencias del sistema operativo necesarias para Postgres
 RUN apt-get update && apt-get install -y \
     gcc \
     libpq-dev \
-    pkg-config \
-    default-libmysqlclient-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # 5. Copiamos los requerimientos e instalamos dependencias de Python
