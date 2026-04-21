@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Compra Rápida</title>
+    <style>
+        body { font-family: Arial; margin: 20px; }
+        .success { color: green; background: #e8f5e9; padding: 10px; border-radius: 5px; }
+        .error { color: red; background: #ffebee; padding: 10px; border-radius: 5px; }
+        .form-group { margin: 15px 0; }
+        button { background: orange; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+<h1>Compra Rápida (Evolución Arquitectura)</h1>
+
+{% if mensaje_exito %}
+    <div class="success">
+        <strong>✅ {{ mensaje_exito }}</strong>
+    </div>
+{% endif %}
+
+{% if error %}
+    <div class="error">
+        <strong>❌ Error: {{ error }}</strong>
+    </div>
+{% endif %}
+
+<div class="form-group">
+    <h2>Producto</h2>
+    <p><strong>Título:</strong> {{ libro.titulo }}</p>
+    <p><strong>Precio (con IVA):</strong> ${{ total }}</p>
+</div>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Comprar Ahora</button>
+</form>
+
+</body>
+</html>

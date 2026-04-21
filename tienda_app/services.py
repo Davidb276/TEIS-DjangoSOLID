@@ -16,7 +16,7 @@ class CompraService:
         total = CalculadorImpuestos.obtener_total_con_iva(libro.precio)
         return {"libro": libro, "total": total}
 
-    def ejecutar_compra(self, libro_id, cantidad):
+    def ejecutar_compra(self, libro_id, cantidad, usuario=None, direccion=""):
         # 1. Obtener datos
         libro = get_object_or_404(Libro, id=libro_id)
         inv = get_object_or_404(Inventario, libro=libro)
@@ -37,6 +37,35 @@ class CompraService:
         inv.cantidad -= cantidad
         inv.save()
         
-        Orden.objects.create(libro=libro, total=total)
+        Orden.objects.create(
+            libro=libro, 
+            total=total,
+            usuario=usuario,
+            direccion_envio=direccion or "Dirección por defecto"
+        )
         
         return total
+
+
+class CompraRapidaService:
+    def __init__(self, procesador_pago):
+        self.procesador_pago = procesador_pago
+
+    def procesar(self, libro_id):
+        libro = Libro.objects.get(id=libro_id)
+        inv = Inventario.objects.get(libro=libro)
+        if inv.cantidad <= 0:
+            raise ValueError("No hay existencias.")
+        total = CalculadorImpuestos.obtener_total_con_iva(libro.precio)
+        if self.procesador_pago.pagar(total):
+            inv.cantidad -= 1
+            inv.save()
+            Orden.objects.create(
+                libro=libro, 
+                total=total,
+                direccion_envio="Dirección por defecto - Compra rápida"
+            )
+            
+            return total
+
+        return None
